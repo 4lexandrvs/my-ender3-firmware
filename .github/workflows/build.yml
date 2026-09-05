@@ -25,7 +25,7 @@ jobs:
       - name: Clone official Marlin 2.1.x
         run: |
           # Скачиваем официальную стабильную ветку Marlin 2.1.x
-          git clone --depth 1 --branch 2.1.2.6 https://github.com/MarlinFirmware/Marlin.git MarlinSource
+          git clone --depth 1 --branch 2.1.2.8 https://github.com/MarlinFirmware/Marlin.git MarlinSource
 
       - name: Copy custom configuration
         run: |
