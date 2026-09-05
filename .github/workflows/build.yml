@@ -43,18 +43,15 @@ jobs:
           cd MarlinSource
           pio run -e STM32F103RE_creality
 
-      - name: Debug - check build output
+      - name: Rename firmware to standard name
         run: |
-          echo "=== Содержимое папки сборки ==="
-          ls -la MarlinSource/.pio/build/STM32F103RE_creality/
-          echo "=== Размер firmware.bin ==="
-          ls -lh MarlinSource/.pio/build/STM32F103RE_creality/firmware.bin
-
-      - name: Copy firmware to root
-        run: |
-          cp MarlinSource/.pio/build/STM32F103RE_creality/firmware.bin ./firmware.bin
-          ls -lh ./firmware.bin
-          echo "✅ Firmware copied to root!"
+          # Находим файл прошивки (с датой в имени) и переименовываем его
+          cd MarlinSource/.pio/build/STM32F103RE_creality/
+          ls -la
+          # Копируем любой файл firmware-*.bin в firmware.bin
+          cp firmware-*.bin firmware.bin
+          echo "✅ Firmware renamed to firmware.bin"
+          ls -la firmware.bin
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -82,7 +79,7 @@ jobs:
             4. Включите принтер — прошивка начнётся автоматически
             5. После загрузки вытащите карту
           files: |
-            ./firmware.bin
+            MarlinSource/.pio/build/STM32F103RE_creality/firmware.bin
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
