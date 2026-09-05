@@ -41,21 +41,48 @@ jobs:
       - name: Build Marlin
         run: |
           cd MarlinSource
-          # Собираем прошивку для платы Creality 4.2.7 (512K)
           pio run -e STM32F103RE_creality
 
-      - name: Find and Extract Firmware (Foolproof method)
+      - name: Debug - check build output
         run: |
-          # Эта команда найдет firmware.bin в любой вложенной папке MarlinSource 
-          # и скопирует его прямо в корень нашего репозитория под именем firmware.bin
-          find MarlinSource -name "firmware.bin" -exec cp {} ./firmware.bin \;
-          
-          echo "=== Проверка: файл прошивки успешно извлечен в корень! ==="
-          ls -la ./firmware.bin
+          echo "=== Содержимое папки сборки ==="
+          ls -la MarlinSource/.pio/build/STM32F103RE_creality/
+          echo "=== Размер firmware.bin ==="
+          ls -lh MarlinSource/.pio/build/STM32F103RE_creality/firmware.bin
 
-      - name: Upload Firmware Artifact
-        uses: actions/upload-artifact@v4
+      - name: Copy firmware to root
+        run: |
+          cp MarlinSource/.pio/build/STM32F103RE_creality/firmware.bin ./firmware.bin
+          ls -lh ./firmware.bin
+          echo "✅ Firmware copied to root!"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: firmware-ender3-427-sprite-se-petg
-          # Теперь мы указываем максимально простой и абсолютный путь в корне
-          path: ./firmware.bin
+          tag_name: v1.0.0-${{ github.run_number }}
+          name: Firmware Build #${{ github.run_number }}
+          body: |
+            ## 🖨️ Прошивка для Ender-3 с платой 4.2.7
+            
+            **Конфигурация:**
+            - Плата: Creality v4.2.7 (STM32F103RE, 512K)
+            - Экструдер: Sprite SE (steps: 424.9)
+            - Автоуровень: CR-Touch, сетка 5x5
+            - Linear Advance: K=0.05 (для PETG)
+            - S-Curve Acceleration: ✅
+            - Input Shaping: ✅
+            - Преднагрев 1: PETG (235°C / 75°C)
+            
+            **Marlin версия:** 2.1.2.6
+            
+            ### 📥 Как установить:
+            1. Скачайте `firmware.bin`
+            2. Скопируйте на microSD-карту (FAT32)
+            3. Выключите принтер, вставьте карту
+            4. Включите принтер — прошивка начнётся автоматически
+            5. После загрузки вытащите карту
+          files: |
+            ./firmware.bin
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
