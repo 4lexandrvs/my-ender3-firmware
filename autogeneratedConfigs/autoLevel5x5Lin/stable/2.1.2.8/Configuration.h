@@ -2250,16 +2250,16 @@
 // Preheat Constants - Up to 10 are supported without changes
 //
 #define PREHEAT_1_LABEL       "PETG"
-#define PREHEAT_1_TEMP_HOTEND 240
-#define PREHEAT_1_TEMP_BED     83
+#define PREHEAT_1_TEMP_HOTEND 238
+#define PREHEAT_1_TEMP_BED     77
 #define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED   0 // Value from 0 to 255
 
-#define PREHEAT_2_LABEL       "PLA"
-#define PREHEAT_2_TEMP_HOTEND 185
-#define PREHEAT_2_TEMP_BED     45
+#define PREHEAT_2_LABEL       "TPU"
+#define PREHEAT_2_TEMP_HOTEND 220
+#define PREHEAT_2_TEMP_BED     55
 #define PREHEAT_2_TEMP_CHAMBER 35
-#define PREHEAT_2_FAN_SPEED   255 // Value from 0 to 255
+#define PREHEAT_2_FAN_SPEED   0 // Value from 0 to 255
 
 #define PREHEAT_3_LABEL       "ABS"
 #define PREHEAT_3_TEMP_HOTEND 240
